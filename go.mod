@@ -1,3 +1,5 @@
-module github.com/roseael/final-project-go
+module final-project-go
 
 go 1.25.5
+
+require github.com/lib/pq v1.11.2 // indirect
