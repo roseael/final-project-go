@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// 1. Database Connection String (DSN)
-	dsn := "postgres://recipe_user:password@localhost:5432/recipe_db?sslmode=disable"
+	dsn := "postgres://recipe:recipe1@localhost:5432/recipe_book?sslmode=disable"
 
 	// 2. Open the Database Pool
 	db, err := database.OpenDB(dsn)
@@ -35,6 +35,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// --- User Routes ---
+	mux.HandleFunc("GET /users", app.ListUsersHandler)
 	mux.HandleFunc("POST /register", app.RegisterUserHandler)
 	mux.HandleFunc("PUT /users/{id}", app.UpdateUserHandler)
 	mux.HandleFunc("DELETE /users/{id}", app.DeleteUserHandler)
@@ -44,6 +45,7 @@ func main() {
 	mux.HandleFunc("POST /ingredients", app.AddIngredientHandler)
 
 	// --- Recipe Routes ---
+	mux.HandleFunc("GET /recipes", app.ListRecipesHandler)
 	mux.HandleFunc("POST /recipes", app.CreateRecipeHandler)
 	mux.HandleFunc("PUT /recipes/{id}", app.UpdateRecipeHandler)
 	mux.HandleFunc("DELETE /recipes/{id}", app.DeleteRecipeHandler)
@@ -55,7 +57,7 @@ func main() {
 	})
 
 	// 5. Start the HTTP Server
-	// We use port 4000 to match your teacher's example
+	// We use port 4000
 	srv := &http.Server{
 		Addr:         ":4000",
 		Handler:      mux,

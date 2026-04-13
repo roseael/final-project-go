@@ -116,3 +116,18 @@ func (app *Application) badRequest(w http.ResponseWriter, msg string) {
 func (app *Application) notFound(w http.ResponseWriter) {
 	app.writeJSON(w, http.StatusNotFound, envelope{"error": "the requested resource could not be found"}, nil)
 }
+
+// Check adds an error message to the map only if a validation check is not 'ok'.
+func (app *Application) Check(errors map[string]string, ok bool, key, message string) {
+	if !ok {
+		// Only add the error if one doesn't already exist for this key
+		if _, exists := errors[key]; !exists {
+			errors[key] = message
+		}
+	}
+}
+
+// failedValidation sends a 422 Unprocessable Entity response containing the errors map.
+func (app *Application) failedValidation(w http.ResponseWriter, errors map[string]string) {
+	app.writeJSON(w, http.StatusUnprocessableEntity, envelope{"errors": errors}, nil)
+}

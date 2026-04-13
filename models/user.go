@@ -18,7 +18,26 @@ type User struct {
 type UserModel struct {
 	DB *sql.DB
 }
+func (m *UserModel) List() ([]*User, error) {
+    query := `SELECT id, username, email FROM users ORDER BY id`
 
+    rows, err := m.DB.Query(query)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var users []*User
+    for rows.Next() {
+        var u User
+        err := rows.Scan(&u.ID, &u.Username, &u.Email)
+        if err != nil {
+            return nil, err
+        }
+        users = append(users, &u)
+    }
+    return users, nil
+}
 // Insert adds a new user to the database.
 func (m UserModel) Insert(user *User) error {
 	query := `

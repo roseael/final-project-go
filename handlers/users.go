@@ -6,6 +6,22 @@ import (
 	"strconv"
 )
 
+func (app *Application) ListUsersHandler(w http.ResponseWriter, r *http.Request) {
+    // 1. Call the Model to fetch the data from the DB
+    users, err := app.Users.List()
+    if err != nil {
+        app.serverError(w, err)
+        return
+    }
+
+    // 2. Wrap the data in an "envelope" and send it as JSON
+    // We use a 200 OK status because the request was successful
+    err = app.writeJSON(w, http.StatusOK, envelope{"users": users}, nil)
+    if err != nil {
+        app.serverError(w, err)
+    }
+}
+
 func (app *Application) RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Username string `json:"username"`

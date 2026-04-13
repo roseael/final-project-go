@@ -10,3 +10,8 @@ CREATE TABLE recipes (
     REFERENCES "users" ("id") 
     ON DELETE CASCADE
 );
+
+--Initial inserts
+INSERT INTO recipes (user_id, title, instructions) VALUES 
+(1, 'Belizean Rice and Beans', 'Cook beans with garlic, add coconut milk and rice, cook over medium heat until rice is fluffy'),
+(2, 'Tres Leches Cake', 'Mix the three milks, pour over the sponge cake, let soak and chill for 4 hours.');

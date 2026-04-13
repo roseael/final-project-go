@@ -6,6 +6,15 @@ import (
 	"strconv"
 )
 
+func (app *Application) ListRecipesHandler(w http.ResponseWriter, r *http.Request) {
+    recipes, err := app.Recipes.List()
+    if err != nil {
+        app.serverError(w, err)
+        return
+    }
+    app.writeJSON(w, http.StatusOK, envelope{"recipes": recipes}, nil)
+}
+
 func (app *Application) CreateRecipeHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		UserID       int64  `json:"user_id"`

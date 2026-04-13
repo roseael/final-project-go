@@ -22,3 +22,29 @@ func (m RecipeModel) Insert(recipe *Recipe) error {
 	
 	return m.DB.QueryRow(query, recipe.UserID, recipe.Title, recipe.Instructions).Scan(&recipe.ID)
 }
+
+func (m *RecipeModel) List() ([]*Recipe, error) {
+    // 1. The SQL Sentence
+    query := `SELECT id, user_id, title, instructions FROM recipes ORDER BY id`
+
+    // 2. Ask the database
+    rows, err := m.DB.Query(query)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close() // Clean up when we're done
+
+    var recipes []*Recipe
+
+    // 3. Loop through the rows and "scan" them into Go objects
+    for rows.Next() {
+        var r Recipe
+        err := rows.Scan(&r.ID, &r.UserID, &r.Title, &r.Instructions)
+        if err != nil {
+            return nil, err
+        }
+        recipes = append(recipes, &r)
+    }
+
+    return recipes, nil
+}
